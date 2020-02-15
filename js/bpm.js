@@ -6,6 +6,7 @@ var gainNode;
 var curr_bpm = 0
 var prev_timestamp = performance.now()
 var interval;
+var isMuted = false;
 
 function printBpm() {
 	beep.play()
@@ -34,9 +35,13 @@ $('body').on('keyup', function() {
 })
 
 $('#mute_button').on('click', function(){
-	console.log("mute button pressed")
-	console.log(gainNode)
-	gainNode.gain.value = 0
+	if (!isMuted) {
+		gainNode.gain.value = 0
+		isMuted = true
+	} else {
+		gainNode.gain.value = 1 
+		isMuted = false
+	}
 })
 function initAudio() {
 	audioCtx = new AudioContext();
