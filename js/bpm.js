@@ -1,7 +1,8 @@
 const AudioContext = window.AudioContext || window.webkitAudioContext;
-let audioCtx = new AudioContext()
+let audioCtx 
 const beep = new Audio('mp3/beep.mp3')
 let track;
+var gainNode;  
 var curr_bpm = 0
 var prev_timestamp = performance.now()
 var interval;
@@ -13,11 +14,11 @@ function printBpm() {
 // audioCtx.resume()
 $('body').on('keyup', function() {
 	if (!audioCtx) {
-		// console.log("initialziing audio context")
+		console.log("initialziing audio context")
 		initAudio();
 	}
 	if (audioCtx.state === 'suspended'){
-		// console.log("resuming")
+		console.log("resuming")
 		audioCtx.resume();
 	}
 	clearInterval(interval)
@@ -32,12 +33,15 @@ $('body').on('keyup', function() {
 	$('#bpm').html(curr_bpm)
 })
 
+$('#mute_button').on('click', function(){
+	console.log("mute button pressed")
+	console.log(gainNode)
+	gainNode.gain.value = 0
+})
 function initAudio() {
 	audioCtx = new AudioContext();
 	track = audioCtx.createMediaElementSource(beep)
-	const gainNode = audioCtx.createGain()
-	gainNode.gain.value = 10;
-
+	gainNode = audioCtx.createGain()
 
 	track.connect(gainNode).connect(audioCtx.destination);
 }
